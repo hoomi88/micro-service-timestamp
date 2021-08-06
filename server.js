@@ -24,27 +24,35 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.get("/api/:myTime", function (req, res) {
+app.get("/api/:myTime?", function (req, res) {
   
-  let myTime = req.params.myTime;
-  let regex = /-/g;
-  let findRes = myTime.search(regex);
+  let myTime = req.params.myTime;  
+  //let regex = /-/g;
+  let findRes;
   let fullDate;
   let timestamp;
   let date;
   console.log(findRes);
-  if (findRes < 0) {
-    date = new Date(Number(myTime));  
-  } else {
-    date = new Date(myTime);    
+  if (myTime === 0 || myTime == null) {
+    date = new Date();
+  } else {  
+    //findRes = myTime.search(regex);
+    if (myTime.length == 13) {      
+      date = new Date(Number(myTime));  
+    } else {
+      date = new Date(myTime);    
+    }
   }
-  
-  fullDate = date.toUTCString();
-  timestamp = Date.parse(date)
-  console.log(fullDate);  
-  console.log(timestamp);
-  
-  res.json({"unix": timestamp, "utc": fullDate });
+  console.log(date);
+  if (date == "Invalid Date"){
+    res.json({error : "Invalid Date"});
+  } else {
+    fullDate = date.toUTCString();
+    timestamp = Date.parse(date)
+    console.log(fullDate);  
+    console.log(timestamp);
+    res.json({"unix": timestamp, "utc": fullDate });
+  }
 });
 
 
