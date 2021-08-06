@@ -24,7 +24,33 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+app.get("/api/:myTime", function (req, res) {
+  
+  let myTime = req.params.myTime;
+  let regex = /-/g;
+  let findRes = myTime.search(regex);
+  let fullDate;
+  let timestamp;
+  let date;
+  console.log(findRes);
+  if (findRes < 0) {
+    date = new Date(Number(myTime));  
+  } else {
+    date = new Date(myTime);    
+  }
+  
+  fullDate = date.toUTCString();
+  timestamp = Date.parse(date)
+  console.log(fullDate);  
+  console.log(timestamp);
+  
+  res.json({"unix": timestamp, "utc": fullDate });
+});
 
+
+//[project url]/api/2015-12-25
+//[project url]/api/1451001600000
+//{"unix":1451001600000, "utc":"Fri, 25 Dec 2015 00:00:00 GMT"}
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
